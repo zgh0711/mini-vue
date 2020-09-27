@@ -6,22 +6,20 @@
  4.负责调用 compiler 解析指令或差值表达式
  */
 
-import Observer from "./observer";
-
-export default class Vue {
+class Vue {
   constructor(options) {
     //通过属性保存选项的数据
     this.$options = options || {}
     this.$data = options.data || {}
     //如果 options.el 是字符串则表示它是一个选择器，这时通过选择器名字找到 DOM 对象，如果不是字符串则表示它是一个 DOM 对象
     this.$el = typeof options.el === 'string' ? document.querySelector(options.el) : options.el
-    
+
     //把 data 中的成员转换为 getter/setter，并注入到 vue 实例中
     this._proxyData(this.$data)
     //调用 observer对象，监听数据变化
     new Observer(this.$data)
   }
-  
+
   _proxyData(data) {
     //遍历 data 中的所有属性
     Object.keys(data).forEach(key => {
@@ -38,9 +36,9 @@ export default class Vue {
           }
           data[key] = newValue
         }
-        
+
       })
     })
-    
+
   }
 }

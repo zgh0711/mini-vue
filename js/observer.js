@@ -4,8 +4,8 @@
   2.data 中的某个属性也可能是对象，要把该属性中的属性也转换为响应式数据
   3.数据变化时发送通知
  */
-import Dep from "./dep";
-export default class Observer {
+
+class Observer {
   constructor(data) {
     this.walk(data)
   }
@@ -15,13 +15,13 @@ export default class Observer {
     if (!data || typeof data !== 'object') {
       return
     }
-    
+
     //遍历 data 对象的所有属性
     Object.keys(data).forEach(key =>{
       this.defineReactive(data, key, data[key])
     })
   }
-  
+
   //定义响应式数据
   defineReactive(data, key, value) {
     let that = this
@@ -45,7 +45,7 @@ export default class Observer {
         value = newValue
         //如果给 data 中的 value 被修改为了一个对象，那么也要将这个对象的所有属性转换为响应式
         that.walk(newValue)
-      
+
         //发送通知
         dep.notify()
       }
