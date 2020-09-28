@@ -38,6 +38,11 @@ class Compiler {
       //将文本节点的内容替换为 key 变量对应的值,
       //todo 这里如果使用 this.vm.key 获取的话，值为 undefined，不明白为啥
       node.textContent = value.replace(reg,this.vm[key])
+
+      //创建 watcher 对象，当数据变化时更新视图
+      new Watcher(this.vm,key,(newValue)=>{
+        node.textContent = newValue
+      })
     }
   }
 
@@ -63,18 +68,32 @@ class Compiler {
     //attrName 即为去掉了 v- 后的指令名字，这里通过拼接字符串的方式找到指令对应的 update 方法
     let updateFunction = this[`${attrName}Updater`]
     if (updateFunction) {
-      updateFunction(node, this.vm[key]);
+      //这里通过 call 函数将 updateFunction 的 this 指向到 compiler 对象，以方便在其内部可以获取到 vm 对象
+      updateFunction.call(this, node, this.vm[key],key);
     }
   }
 
   //处理 v-text 指令
-  textUpdater(node, value) {
+  textUpdater(node, value, key) {
     node.textContent = value
+    //创建观察者对象，当数据变化时更新视图
+    new Watcher(this.vm, key, (newValue)=>{
+      node.textContent = newValue
+    })
   }
 
   //处理 v-model 指令,v-model 是用于表单元素的，给表单元素赋值就是给它的 value 属性赋值
-  modelUpdater(node, value) {
+  modelUpdater(node, value, key) {
     node.value = value
+    //创建观察者对象，当数据变化时更新视图
+    new Watcher(this.vm, key, (newValue)=>{
+      node.value = newValue
+    })
+
+    //给 v-model 绑定的元素注册事件，在事件处理函数中将元素当前值赋值给它绑定的变量，从而实现双向绑定
+    node.addEventListener('input', ()=>{
+      this.vm[key] = node.value
+    })
   }
 
   //判断元素属性是否是指令,即判断元素属性是否是以 v- 开头

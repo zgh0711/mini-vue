@@ -38,9 +38,7 @@ class Vue {
           }
           data[key] = newValue
         }
-
       })
     })
-
   }
 }

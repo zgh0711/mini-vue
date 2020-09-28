@@ -34,8 +34,8 @@ class Observer {
       configurable:false,
       get() {
         //收集依赖
-        if (dep.target) {
-          dep.addSub(dep.target)
+        if (Dep.target) {
+          dep.addSub(Dep.target)
         }
         return value;
       },
