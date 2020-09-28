@@ -25,14 +25,15 @@ class Observer {
   //定义响应式数据
   defineReactive(data, key, value) {
     let that = this
-    //负责手机依赖并发送通知
+    //为没一个属性创建 dep 对象，负责收集依赖并发送通知
     let dep = new Dep()
     //如果 value 是对象，则将 value 的属性也转换成响应式
     that.walk(value)
     Object.defineProperty(data,key,{
       enumerable:true,
-      configurable:true,
+      configurable:false,
       get() {
+        //收集依赖
         if (dep.target) {
           dep.addSub(dep.target)
         }

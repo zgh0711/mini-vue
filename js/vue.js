@@ -28,7 +28,7 @@ class Vue {
       //将 data 中的所有属性注入到 vue 实例中，这里的 this 就是 vue 实例，这样的话就可以通过 vue.msg 的方式访问变量了
       Object.defineProperty(this, key, {
         enumerable:true,
-        configurable:true,
+        configurable:false,
         get() {
           return data[key]
         },
