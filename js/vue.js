@@ -16,14 +16,16 @@ class Vue {
 
     //把 data 中的成员转换为 getter/setter，并注入到 vue 实例中
     this._proxyData(this.$data)
-    //调用 observer对象，监听数据变化
+    //调用 observer 对象，监听数据变化
     new Observer(this.$data)
+    //调用 compiler 对象，解析指令和差值表达式
+    new Compiler(this)
   }
 
   _proxyData(data) {
     //遍历 data 中的所有属性
     Object.keys(data).forEach(key => {
-      //将 data 中的所有属性注入到 vue 实例中，这里的 this 就是 vue 实例
+      //将 data 中的所有属性注入到 vue 实例中，这里的 this 就是 vue 实例，这样的话就可以通过 vue.msg 的方式访问变量了
       Object.defineProperty(this, key, {
         enumerable:true,
         configurable:true,
